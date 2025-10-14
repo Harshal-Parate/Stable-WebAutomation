@@ -1,0 +1,6 @@
+{
+  "users": [
+    { "id": "User1", "username": "standard_user", "password": "secret_sauce" },
+    { "id": "user2", "username": "locked_out_user", "password": "secret_sauce" }
+  ]
+}

@@ -1,0 +1,15 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+<suite name="CrossBrowserSuite" parallel="tests" thread-count="3" verbose="1">
+    <listeners>
+        <listener class-name="io.qameta.allure.testng.AllureTestNg" />
+        <listener class-name="org.example.listeners.AllureTestListeners"/>
+        <listener class-name="org.example.listeners.RetryListener"/>
+    </listeners>
+
+    <test name="ChromeTests" preserve-order="true">
+        <parameter name="browser" value="chrome"/>
+        <classes>
+            <class name="org.example.tests.LoginTests"/>
+        </classes>
+    </test>
+</suite>

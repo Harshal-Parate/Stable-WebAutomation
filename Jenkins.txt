@@ -1,0 +1,53 @@
+pipeline {
+    agent any
+    triggers {
+        cron('0 8 * * *') // daily at 08:00 server time
+    }
+    environment {
+        MAVEN_OPTS = '-Xmx1g'
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+        stage('Build') {
+            steps {
+                sh 'mvn -B -DskipTests clean package'
+            }
+        }
+        stage('Run Tests') {
+            steps {
+                // If you want to pass a custom config file and user file:
+                sh 'mvn -B test -Dconfig=ci/config.properties -Dusers.file=ci/users.json'
+            }
+            post {
+                always {
+                    // archive results for Allure
+                    junit '**/target/surefire-reports/*.xml'
+                    archiveArtifacts artifacts: 'target/*', fingerprint: true
+                }
+            }
+        }
+        stage('Allure Report') {
+            steps {
+                // generate allure
+                sh 'mvn allure:report'
+            }
+            post {
+                always {
+                    allure includeProperties: false, jdk: '', results: [[path: 'target/allure-results']]
+                }
+            }
+        }
+    }
+    post {
+        success {
+            echo 'Pipeline finished successfully'
+        }
+        failure {
+            echo 'Pipeline failed'
+        }
+    }
+}
