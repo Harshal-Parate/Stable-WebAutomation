@@ -36,7 +36,11 @@ public final class DriverFactory {
     public static void removeDriver() {
         WebDriver d = tlDriver.get();
         if (d != null) {
-            try { d.quit(); } catch (Exception e) { logger.warn("Driver quit failed", e); }
+            try {
+                d.quit();
+            } catch (Exception e) {
+                logger.warn("Driver quit failed", e);
+            }
         }
         tlDriver.remove();
     }
